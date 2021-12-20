@@ -6,8 +6,8 @@ from webodt.conf import WEBODT_ABIWORD_COMMAND
 
 WEBODT_ABIWORD_COMMAND = ['/usr/bin/abiword', '--plugin', 'AbiCommand']
 
-class AbiwordODFConverter(ODFConverter):
 
+class AbiwordODFConverter(ODFConverter):
 
     def convert(self, document, format=None, output_filename=None, delete_on_close=True):
         output_filename, format = self._guess_format_and_filename(output_filename, format)

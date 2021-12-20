@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
-import urllib, urllib2, uuid
+import urllib.request, urllib.parse, urllib.error, urllib.request, urllib.error, urllib.parse, uuid
 from lxml import etree
-from cStringIO import StringIO
+from io import StringIO
 from webodt import Document
 from webodt.converters import ODFConverter
 
@@ -10,13 +10,12 @@ from webodt.conf import WEBODT_GOOGLEDOCS_EMAIL, WEBODT_GOOGLEDOCS_PASSWORD
 AUTH_URL = 'https://www.google.com/accounts/ClientLogin'
 
 
-class DeleteRequest(urllib2.Request):
+class DeleteRequest(urllib.request.Request):
     def get_method(self):
         return 'DELETE'
 
 
 class GoogleDocsODFConverter(ODFConverter):
-
 
     def _get_auth_token(self):
         post_data = {
@@ -26,15 +25,13 @@ class GoogleDocsODFConverter(ODFConverter):
             'service': 'writely', # http://code.google.com/intl/ru/apis/documents/faq_gdata.html#clientlogin
             'source': 'NetAngels-webodt-0.1',
         }
-        url = urllib2.urlopen(AUTH_URL, urllib.urlencode(post_data))
+        url = urllib.request.urlopen(AUTH_URL, urllib.parse.urlencode(post_data))
         data = url.read()
         data_dict = dict([line.split('=', 1) for line in data.splitlines()])
         return data_dict['Auth']
 
-
     def __init__(self):
         self.auth_token = self._get_auth_token()
-
 
     def convert(self, document, format=None, output_filename=None, delete_on_close=True):
         # opener = urllib2.build_opener(urllib2.HTTPSHandler(debuglevel=1))
@@ -50,8 +47,8 @@ class GoogleDocsODFConverter(ODFConverter):
             'Content-Type': document.content_type,
             'Slug': '%s.%s' % (uuid.uuid4(), document.format),
         }
-        request = urllib2.Request(url, data, headers)
-        response = urllib2.urlopen(request)
+        request = urllib.request.Request(url, data, headers)
+        response = urllib.request.urlopen(request)
         data = response.read()
         response.close()
         tree = etree.parse(StringIO(data))
@@ -71,8 +68,8 @@ class GoogleDocsODFConverter(ODFConverter):
             'GData-Version': '3.0',
             'Authorization': 'GoogleLogin auth=%s' % self.auth_token,
         }
-        request = urllib2.Request(url, None, headers)
-        response = urllib2.urlopen(request)
+        request = urllib.request.Request(url, None, headers)
+        response = urllib.request.urlopen(request)
         data = response.read()
         response.close()
         fd = open(output_filename, 'w')
@@ -95,6 +92,6 @@ class GoogleDocsODFConverter(ODFConverter):
             'Authorization': 'GoogleLogin auth=%s' % self.auth_token,
         }
         request = DeleteRequest(url, None, headers)
-        response = urllib2.urlopen(request)
+        response = urllib.request.urlopen(request)
         data = response.read()
         response.close()

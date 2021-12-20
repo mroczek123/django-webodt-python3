@@ -1,30 +1,31 @@
 # -*- coding: utf-8 -*-
 from django.template import Context
-from cStringIO import StringIO
+from io import StringIO
 from lxml import etree
 import unittest
 import webodt
 from webodt.preprocessors import unescape_templatetags_preprocessor, xmlfor_preprocessor, _find_common_ancestor
 
 
-
 class UnescapeTemplatetagsTest(unittest.TestCase):
 
     def test_unescape_templatetags_preprocessor(self):
         content = unescape_templatetags_preprocessor(
-            u'{% if user == &quot;John Doe&quot; %}&lt;'
-            u'{% if balance &gt; 10.00 %}{{ &quot;profit!&quot; }}{% endif %}'
-            u'{% endif %}'
+            '{% if user == &quot;John Doe&quot; %}&lt;'
+            '{% if balance &gt; 10.00 %}{{ &quot;profit!&quot; }}{% endif %}'
+            '{% endif %}'
         )
-        self.assertEqual(content,
-            u'{% if user == "John Doe" %}&lt;'
-            u'{% if balance > 10.00 %}{{ "profit!" }}{% endif %}'
-            u'{% endif %}'
+        self.assertEqual(
+            content,
+            '{% if user == "John Doe" %}&lt;'
+            '{% if balance > 10.00 %}{{ "profit!" }}{% endif %}'
+            '{% endif %}'
         )
 
     def test_unescape_in_templates(self):
-        template = webodt.ODFTemplate('unescape_templatetags.odt',
-            preprocessors=['webodt.preprocessors.unescape_templatetags_preprocessor',]
+        template = webodt.ODFTemplate(
+            'unescape_templatetags.odt',
+            preprocessors=['webodt.preprocessors.unescape_templatetags_preprocessor', ]
         )
         context = {'user': 'John Doe'}
         document = template.render(Context(context))

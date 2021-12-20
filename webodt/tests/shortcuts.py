@@ -1,8 +1,9 @@
 # -*- coding: utf8 -*-
-from django.utils import unittest
+from django.test import TestCase
 from webodt.shortcuts import render_to, render_to_response
 
-class RenderToTest(unittest.TestCase):
+
+class RenderToTest(TestCase):
 
     def test_render_to(self):
         context = {
