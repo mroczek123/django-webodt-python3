@@ -12,6 +12,7 @@ import zipfile
 import tempfile
 import shutil
 import time
+import io
 from django.template import Template
 from django.utils.encoding import smart_str
 from webodt.conf import WEBODT_TEMPLATE_PATH, WEBODT_ODF_TEMPLATE_PREPROCESSORS, WEBODT_TMP_DIR
@@ -148,17 +149,17 @@ class _UnpackedODFHandler(object):
         shutil.copytree(self.dirname, dstdir)
 
 
-class Document(file):
+class Document(io.FileIO):
 
     def __init__(self, filename, mode='rb', buffering=1, delete_on_close=True):
-        file.__init__(self, filename, mode, buffering)
+        super().__init__(self, filename, mode, buffering)
         self.delete_on_close = delete_on_close
 
     def delete(self):
         os.unlink(self.name)
 
     def close(self):
-        file.close(self)
+        super().close()
         if self.delete_on_close:
             self.delete()
 
