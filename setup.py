@@ -23,7 +23,7 @@ setup(
     description=u'ODF template handler and odt to html, pdf, doc, etc converter',
     long_description=read('README.rst'),
     install_requires=[
-        'Django==1.11',
+        'Django=1.11.29',
         'lxml',
     ],
     classifiers=(
